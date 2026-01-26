@@ -1,12 +1,12 @@
 import unittest
 from appium import webdriver
-from appium.options.ios import XCUITestOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from appium.webdriver.common.appiumby import AppiumBy
-
+from appium.options.ios import XCUITestOptions
+from logout import LogoutFunction
 
 class TestLoginAsGuest(unittest.TestCase):
 
@@ -26,18 +26,17 @@ class TestLoginAsGuest(unittest.TestCase):
             command_executor="http://127.0.0.1:4723",
             options=options
         )
+        self.wait = WebDriverWait(self.driver, 30)
 
-        self.wait = WebDriverWait(self.driver, 20)
 
     def test_login_as_guest(self):
         """Verify user can continue as guest"""
 
         # 🔁 Step 1: Check login state
-        if self.is_user_logged_in():
-            print("User already logged in → logging out")
-            self.logout()
-        else:
-            print("User not logged in")
+        logout = LogoutFunction()
+        logout.driver = self.driver
+        logout.wait = self.wait
+        logout.logoutFunction()
 
         # 🔘 Step 2: Click Continue as Guest
         continue_button = self.wait.until(
@@ -88,20 +87,7 @@ class TestLoginAsGuest(unittest.TestCase):
         )
         logout_button.click()
 
-        # confirm_logout = self.wait.until(
-        #     EC.element_to_be_clickable(
-        #         (By.NAME, "Confirm")
-        #     )
-        # )
-        # confirm_logout.click()
-
-        # self.clear_cache_soft()
-
-        # self.wait.until(
-        #     EC.presence_of_element_located(
-        #     (AppiumBy.ACCESSIBILITY_ID, "Continue as Guest")
-        #     )
-        # )
+        
 
     def clear_cache_soft(self):
         """Terminate and relaunch app to clear in-memory cache"""
