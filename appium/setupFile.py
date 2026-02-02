@@ -1,14 +1,18 @@
-from appium.options.ios import XCUITestOptions
+# setupFile.py
+import unittest
 from appium import webdriver
+from appium.options.ios import XCUITestOptions
 from selenium.webdriver.support.ui import WebDriverWait
 
-class SetupFile:
+
+class SetupFile(unittest.TestCase):
+
     def setUp(self):
         options = XCUITestOptions()
         options.platform_name = "iOS"
         options.platform_version = "17.0"
-        options.device_name = "iPhone 11"
-        options.udid = "00008030-000621290C39802E"
+        options.device_name = "iPhone 17"
+        options.udid = "BF288222-4428-4E67-8878-2DAC2732FE3A"
         options.automation_name = "XCUITest"
         options.bundle_id = "com.yumealz.uat"
         options.no_reset = True
@@ -19,6 +23,8 @@ class SetupFile:
             command_executor="http://127.0.0.1:4723",
             options=options
         )
+        self.wait = WebDriverWait(self.driver, 30)
 
-        self.wait = WebDriverWait(self.driver, 20)
-        return self.driver, self.wait
+    def tearDown(self):
+        if self.driver:
+            self.driver.quit()
