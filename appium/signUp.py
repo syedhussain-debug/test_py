@@ -17,35 +17,20 @@ from webdriver_manager.chrome import ChromeDriverManager
 from getotp import OTPService
 from openpyxl import Workbook, load_workbook
 from logout import LogoutFunction
+from setupFile import SetupFile
 
 import os
 
 EXCEL_FILE = "phone_numbers.xlsx"
 SHEET_NAME = "Numbers"
 
-class TestSignupWithOTP(unittest.TestCase):
+class TestSignupWithOTP(SetupFile):
     
 
-
-    def setUp(self):
-        options = XCUITestOptions()
-        options.platform_name = "iOS"
-        options.platform_version = "17.0"
-        options.device_name = "iPhone 11"
-        options.udid = "00008030-000621290C39802E"
-        options.automation_name = "XCUITest"
-        options.bundle_id = "com.yumealz.uat"
-        options.no_reset = True
-
-        self.driver = appium_webdriver.Remote(
-            "http://127.0.0.1:4723",
-            options=options
-        )
-
-        self.wait = WebDriverWait(self.driver, 30)
-        self.fake = Faker("ar_SA")
+        
 
     def test_signup(self):
+        self.fake = Faker("ar_SA")
         """Verify user can sign up using OTP"""
         logout = LogoutFunction()
         logout.driver = self.driver
