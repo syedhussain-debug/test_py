@@ -5,11 +5,28 @@ from selenium.common.exceptions import TimeoutException
 
 class LogoutFunction:
     def logoutFunction(self):
+        if self.skip_welcome_tour():
+            print("Skipped welcome tour if it was present.")
+        else:        
+            print("No welcome tour to skip.")
+            
         if self.is_user_logged_in():
+
             print("User already logged in → logging out")
             self.logout()
         else:
             print("User not logged in")
+
+    def skip_welcome_tour(self):
+        """Skip welcome tour if it appears"""
+        try:
+            skip_button = self.wait.until(
+                EC.element_to_be_clickable((By.NAME, "Skip"))
+            )
+            skip_button.click()
+            print("Welcome tour skipped.")
+        except Exception:
+            print("Welcome tour not displayed")
        
     def is_user_logged_in(self):
         """Quick check if Home tab exists"""

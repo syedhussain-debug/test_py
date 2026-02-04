@@ -1,4 +1,9 @@
 import unittest
+import sys
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
 import time
 import random
 import requests
@@ -14,12 +19,15 @@ from faker import Faker
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from getotp import OTPService
+from functions.getotp import OTPService
 from openpyxl import Workbook, load_workbook
-from logout import LogoutFunction
-from setupFile import SetupFile
+from functions.logout import LogoutFunction
+from functions.setupFile import SetupFile
 
 import os
+
+from test.initializeByAlert import InitializeByAlert
+from test.profileStatus import ProfileStatus
 
 EXCEL_FILE = "phone_numbers.xlsx"
 SHEET_NAME = "Numbers"
@@ -31,6 +39,7 @@ class TestSignupWithOTP(SetupFile):
 
     def test_signup(self):
         self.fake = Faker("ar_SA")
+        print("🚀 Starting signup test...")
         """Verify user can sign up using OTP"""
         logout = LogoutFunction()
         logout.driver = self.driver
@@ -85,6 +94,12 @@ class TestSignupWithOTP(SetupFile):
             )
         )
         otp_field.send_keys(otp_code)
+
+        locationAndAlert = InitializeByAlert()
+        locationAndAlert.intilize_setup(self.driver, self.wait)        
+        profileStatus = ProfileStatus()
+        profileStatus.assertionCondition(self.driver, self.wait, self)
+        
 
     # ---------------- HELPERS ---------------- #
 
