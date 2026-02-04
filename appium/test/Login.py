@@ -1,23 +1,27 @@
 import unittest
-from appium import webdriver
+import sys
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
 from appium.webdriver.common.appiumby import AppiumBy
-from appium.options.ios import XCUITestOptions
-from logout import LogoutFunction
-from getotp import OTPService
+from functions.logout import LogoutFunction
+from functions.getotp import OTPService
 from openpyxl import load_workbook
+
+from test.initializeByAlert import InitializeByAlert
+from test.profileStatus import ProfileStatus
 import random
-from setupFile import SetupFile
+from functions.setupFile import SetupFile
 
 
 class LoginFunction(SetupFile):
 
     def test_login(self):
+        print("🚀 Starting login test...")
         """Verify user can log in"""
-
         # 🔁 Step 1: Check login state
         logout = LogoutFunction()
         logout.driver = self.driver
@@ -44,6 +48,13 @@ class LoginFunction(SetupFile):
             )
         )
         otp_field.send_keys(otp_code)
+
+        locationAndAlert = InitializeByAlert()
+        locationAndAlert.intilize_setup(self.driver, self.wait)        
+        profileStatus = ProfileStatus()
+        profileStatus.assertionCondition(self.driver, self.wait, self)
+
+        
     def get_random_phone_from_excel(self):
         file_path = "phone_numbers.xlsx"
         sheet_name = "Numbers"

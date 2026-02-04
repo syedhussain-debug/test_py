@@ -1,9 +1,10 @@
 import unittest
 
 # Import your test classes
-from loginAsGuest import TestLoginAsGuest
-from signUp import TestSignupWithOTP
-from Login import LoginFunction
+from test.loginAsGuest import TestLoginAsGuest
+from test.signUp import TestSignupWithOTP
+from test.Login import LoginFunction
+from test.scheduledSubscriptionFlow import ScheduledSubscriptionFlow
 
 
 if __name__ == "__main__":
@@ -14,6 +15,7 @@ if __name__ == "__main__":
     suite.addTests(loader.loadTestsFromTestCase(TestLoginAsGuest))
     suite.addTests(loader.loadTestsFromTestCase(TestSignupWithOTP))
     suite.addTests(loader.loadTestsFromTestCase(LoginFunction))
+    #suite.addTests(loader.loadTestsFromTestCase(ScheduledSubscriptionFlow))
 
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite)
